@@ -9,13 +9,23 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    let myLabel = SKLabelNode(fontNamed:"Helvetica")
+
+               let brick = SKShapeNode(rectOfSize: CGSize(width: 30, height: 15))
+
+    
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-        let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello, World!";
-        myLabel.fontSize = 65;
-        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
+         myLabel.text = "Blocky!"
+        myLabel.fontSize = 24
         
+        myLabel.position = CGPoint(x:0 , y: 0); //CGRectGetMaxY( self.frame) -   myLabel.frame.height
+        
+brick.fillColor = UIColor.blueColor()
+brick.position = CGPoint(x:100, y:100)
+
+self.addChild(brick)
+
         self.addChild(myLabel)
     }
     
@@ -25,19 +35,35 @@ class GameScene: SKScene {
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
             
-            let sprite = SKSpriteNode(imageNamed:"Spaceship")
+//            let sprite = SKSpriteNode(imageNamed:"Spaceship")
+//            
+//            sprite.xScale = 0.5
+//            sprite.yScale = 0.5
+//            sprite.position = location
+//            
+            //myLabel.position = location
+            myLabel.text = "\(location.x)   \(location.y)"
             
-            sprite.xScale = 0.5
-            sprite.yScale = 0.5
-            sprite.position = location
+//            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
+
+  //          brick.runAction(SKAction.moveTo(CGPoint(x: brick.position.x, y:location.y) , duration: 0.3))
             
-            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
+//            sprite.runAction(SKAction.repeatActionForever(action))
             
-            sprite.runAction(SKAction.repeatActionForever(action))
+          //  self.addChild(sprite)
             
-            self.addChild(sprite)
+            
         }
     }
+ override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
+    
+        for touch: AnyObject in touches {
+            let location = touch.locationInNode(self)
+    
+            brick.position = CGPoint(x: brick.position.x, y:location.y)
+      
+        }
+}
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */

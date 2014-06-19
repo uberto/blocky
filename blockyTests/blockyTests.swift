@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import blocky
 
 class blockyTests: XCTestCase {
     
@@ -23,6 +24,52 @@ class blockyTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         XCTAssert(true, "Pass")
+        
+        
+        var col = Column(size: 10)
+        
+        let v = col.size
+        
+        
+        
+        col.draw()
+        
+        
+        var block = col.addBlock(2)
+        
+        
+        col.draw()
+        
+        
+        var block2 = col.addBlock(3)
+        
+        
+        col.draw()
+        
+        
+        col.addBlock(1)
+        
+        col.addBlock(10)
+        
+        
+        col.draw()
+        
+        let nb = col.getBlockAt( 2)
+        nb == nil
+        
+        let c = col.getBlockAt( 3)
+        c!.size
+        
+        col.draw()
+        
+        
+        let b = col.getBlockAt( 3)!
+        b.moveDown()
+        
+         XCTAssertEqual(col.draw(), "##__###_#_", "Pass")
+        
+        
+        
     }
     
     func testPerformanceExample() {
