@@ -9,24 +9,34 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    
     let myLabel = SKLabelNode(fontNamed:"Helvetica")
 
-               let brick = SKShapeNode(rectOfSize: CGSize(width: 30, height: 15))
+    let brick = SKShapeNode(rectOfSize: CGSize(width: 50, height: 30))
+
+    let myGrid = SKShapeNode(rectOfSize: CGSize(width: 750, height: 750))
 
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-         myLabel.text = "Blocky!"
+        myLabel.text = "Blocky!"
         myLabel.fontSize = 24
         
-        myLabel.position = CGPoint(x:300 , y: 300); //CGRectGetMaxY( self.frame) -   myLabel.frame.height
+        myLabel.position = CGPoint(x:CGRectGetMaxX( self.frame)/2 , y: CGRectGetMaxY( self.frame)/2 ); //-   myLabel.frame.height
         
-brick.fillColor = UIColor.blueColor()
-brick.position = CGPoint(x:100, y:100)
+        brick.fillColor = UIColor.blueColor()
+        brick.position = CGPoint(x:100, y:100)
 
-self.addChild(brick)
-
+        let gridX = CGRectGetMaxY( self.frame) / 2.0
+        
+        
+        myGrid.position = CGPoint(x:gridX,y:gridX)
+        
+        self.addChild(brick)
+        
         self.addChild(myLabel)
+        
+        self.addChild(myGrid)
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -42,7 +52,7 @@ self.addChild(brick)
 //            sprite.position = location
 //            
             //myLabel.position = location
-            myLabel.text = "\(location.x)   \(location.y)"
+            myLabel.text = "\(Int(location.x))   \(Int(location.y))"
             
 //            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
 
