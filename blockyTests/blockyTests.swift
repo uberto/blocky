@@ -32,27 +32,28 @@ class blockyTests: XCTestCase {
         
         
         
-        col.draw()
+        XCTAssertEqual(col.draw(), "__________", "Pass")
         
         
         var block = col.addBlock(2)
         
         
-        col.draw()
+        XCTAssertEqual(col.draw(), "##________", "Pass")
         
         
         var block2 = col.addBlock(3)
         
         
-        col.draw()
+        XCTAssertEqual(col.draw(), "##_###____", "Pass")
         
         
         col.addBlock(1)
         
-        col.addBlock(10)
+        XCTAssertFalse(col.addBlock(10))
         
         
-        col.draw()
+        
+        XCTAssertEqual(col.draw(), "##_###_#__", "Pass")
         
         let nb = col.getBlockAt( 2)
         nb == nil
@@ -60,7 +61,7 @@ class blockyTests: XCTestCase {
         let c = col.getBlockAt( 3)
         c!.size
         
-        col.draw()
+        XCTAssertEqual(col.draw(), "##_###_#__", "Pass")
         
         
         let b = col.getBlockAt( 3)!
@@ -72,11 +73,11 @@ class blockyTests: XCTestCase {
         
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock() {
-            // Put the code you want to measure the time of here.
-        }
-    }
+//    func testPerformanceExample() {
+//        // This is an example of a performance test case.
+//        self.measureBlock() {
+//            // Put the code you want to measure the time of here.
+//        }
+//    }
     
 }
