@@ -21,7 +21,7 @@ class blockyTests: XCTestCase {
         super.tearDown()
     }
     
-    func startEmpty() {
+    func testStartEmpty() {
         var col = Column(size: 10)
         
         XCTAssertEqual(col.draw(), "__________", "Pass")
@@ -29,7 +29,7 @@ class blockyTests: XCTestCase {
     }
     
     
-    func startFillWithBlocks() {
+    func testStartFillWithBlocks() {
         
         var col = Column(size: 10)
         
@@ -56,7 +56,7 @@ class blockyTests: XCTestCase {
         
     }
     
-    func getBlockAtPosition() {
+    func testGetBlockAtPosition() {
         
         var col = Column(size: 10)
         col.addBlock(2)
@@ -74,7 +74,7 @@ class blockyTests: XCTestCase {
     }
     
     
-    func moveDown() {
+    func testMoveDown() {
         
         var col = Column(size: 10)
         col.addBlock(2)
@@ -97,7 +97,8 @@ class blockyTests: XCTestCase {
         
     }
     
-    func moveUp() {
+
+    func testMoveUp() {
         
         var col = Column(size: 10)
         col.addBlock(2)
@@ -109,20 +110,19 @@ class blockyTests: XCTestCase {
         XCTAssertTrue( c.moveDown())
         XCTAssertTrue( c.moveDown())
         
-        XCTAssertEqual(col.draw(), "11__##_###_#", "Pass")
+        XCTAssertEqual(col.draw(), "__##_###_#", "Pass")
         
         XCTAssertTrue( c.moveUp())
         
         XCTAssertEqual(col.draw(), "_##__###_#", "Pass")
         
-        let b = col.getBlockAt(0)!
+        let b = col.getBlockAt(9)!
         
-        XCTAssertFalse( b.moveUp())
+        XCTAssertTrue( b.moveUp())
         
-        XCTAssertEqual(col.draw(), "_##_###__#", "Pass")
+        XCTAssertEqual(col.draw(), "_##_###_#_", "Pass")
         
     }
-    
 
     
 //    func testPerformanceExample() {

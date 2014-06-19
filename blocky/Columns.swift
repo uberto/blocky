@@ -67,6 +67,7 @@ class Column
         lastSpace.size = newSpaceSize
         lastSpace.next = b
         b.next = newLast
+        newLast.prev = b
         
         return true
         
@@ -133,7 +134,7 @@ class Block: CellGroup{
     }
     
     func moveDown() -> Bool{
-        if next.shrink() {
+        if next.shrinkDown() {
             prev.size += 1
             return true
         }
@@ -141,7 +142,7 @@ class Block: CellGroup{
     }
     
     func moveUp() -> Bool{
-        if prev.shrink() {
+        if prev.shrinkUp() {
             next.size += 1
             return true
         }
@@ -154,6 +155,7 @@ class Space: CellGroup{
     
     var size = 0
     var next: Block? = nil
+    var prev: Block? = nil
     
     init(let size: Int){
         self.size = size
@@ -163,18 +165,28 @@ class Space: CellGroup{
         return "_" ** size
     }
     
-    func shrink()-> Bool{
-        if size > 1 {
+    func shrinkDown()-> Bool{
+        if size > 1 || (size == 1 && next == nil) {
             size -= 1
             return true
         } else if let nextB = next{
-            return nextB.next.shrink()
+            return nextB.next.shrinkDown()
         } else{
             return false
         }
-        
-        
     }
+
+    func shrinkUp()-> Bool{
+        if size > 1 || (size == 1 && prev == nil){
+            size -= 1
+            return true
+        } else if let nextB = prev{
+            return nextB.prev.shrinkUp()
+        } else{
+            return false
+        }
+    }
+
 }
 
 protocol CellGroup{

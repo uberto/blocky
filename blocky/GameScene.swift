@@ -19,7 +19,7 @@ class GameScene: SKScene {
          myLabel.text = "Blocky!"
         myLabel.fontSize = 24
         
-        myLabel.position = CGPoint(x:0 , y: 0); //CGRectGetMaxY( self.frame) -   myLabel.frame.height
+        myLabel.position = CGPoint(x:300 , y: 300); //CGRectGetMaxY( self.frame) -   myLabel.frame.height
         
 brick.fillColor = UIColor.blueColor()
 brick.position = CGPoint(x:100, y:100)
@@ -55,6 +55,12 @@ self.addChild(brick)
             
         }
     }
+    
+    
+    override func touchesEnded(touches: NSSet!, withEvent event: UIEvent!){
+        
+    }
+    
  override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
     
         for touch: AnyObject in touches {
