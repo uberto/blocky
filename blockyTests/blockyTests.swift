@@ -21,19 +21,17 @@ class blockyTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
-        
-        
+    func startEmpty() {
         var col = Column(size: 10)
-        
-        let v = col.size
-        
-        
         
         XCTAssertEqual(col.draw(), "__________", "Pass")
         
+    }
+    
+    
+    func startFillWithBlocks() {
+        
+        var col = Column(size: 10)
         
         var block = col.addBlock(2)
         
@@ -55,23 +53,77 @@ class blockyTests: XCTestCase {
         
         XCTAssertEqual(col.draw(), "##_###_#__", "Pass")
         
-        let nb = col.getBlockAt( 2)
-        nb == nil
-        
-        let c = col.getBlockAt( 3)
-        c!.size
-        
-        XCTAssertEqual(col.draw(), "##_###_#__", "Pass")
-        
-        
-        let b = col.getBlockAt( 3)!
-        b.moveDown()
-        
-         XCTAssertEqual(col.draw(), "##__###_#_", "Pass")
-        
-        
         
     }
+    
+    func getBlockAtPosition() {
+        
+        var col = Column(size: 10)
+        col.addBlock(2)
+        col.addBlock(3)
+        col.addBlock(1)
+        
+        
+        XCTAssertNil(col.getBlockAt( 2));
+        
+        let c = col.getBlockAt( 3)!
+        
+        XCTAssertEqual(c.size, 3);
+      
+        
+    }
+    
+    
+    func moveDown() {
+        
+        var col = Column(size: 10)
+        col.addBlock(2)
+        col.addBlock(3)
+        col.addBlock(1)
+        
+        let c = col.getBlockAt( 3)!
+        
+        XCTAssertTrue( c.moveDown())
+        
+        XCTAssertEqual(col.draw(), "##__###_#_", "Pass")
+        
+        XCTAssertTrue( c.moveDown())
+        
+        XCTAssertEqual(col.draw(), "##___###_#", "Pass")
+        
+        XCTAssertFalse( c.moveDown())
+        
+        XCTAssertEqual(col.draw(), "##___###_#", "Pass")
+        
+    }
+    
+    func moveUp() {
+        
+        var col = Column(size: 10)
+        col.addBlock(2)
+        col.addBlock(3)
+        col.addBlock(1)
+        
+        let c = col.getBlockAt(0)!
+        
+        XCTAssertTrue( c.moveDown())
+        XCTAssertTrue( c.moveDown())
+        
+        XCTAssertEqual(col.draw(), "11__##_###_#", "Pass")
+        
+        XCTAssertTrue( c.moveUp())
+        
+        XCTAssertEqual(col.draw(), "_##__###_#", "Pass")
+        
+        let b = col.getBlockAt(0)!
+        
+        XCTAssertFalse( b.moveUp())
+        
+        XCTAssertEqual(col.draw(), "_##_###__#", "Pass")
+        
+    }
+    
+
     
 //    func testPerformanceExample() {
 //        // This is an example of a performance test case.

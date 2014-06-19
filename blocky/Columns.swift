@@ -140,6 +140,14 @@ class Block: CellGroup{
         return false
     }
     
+    func moveUp() -> Bool{
+        if prev.shrink() {
+            next.size += 1
+            return true
+        }
+        return false
+    }
+    
 }
 
 class Space: CellGroup{
