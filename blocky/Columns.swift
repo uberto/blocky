@@ -134,19 +134,22 @@ class Block: CellGroup{
     }
     
     func moveDown() -> Bool{
-        if next.shrinkDown() {
-            prev.size += 1
-            return true
+        if !next.shrinkDown() {
+            return false
         }
-        return false
+        prev.inflate()
+        return true
+        
     }
     
     func moveUp() -> Bool{
-        if prev.shrinkUp() {
-            next.size += 1
-            return true
+        if !prev.shrinkUp() {
+            return false
         }
-        return false
+        
+        next.inflate()
+        return true
+        
     }
     
 }
@@ -166,27 +169,44 @@ class Space: CellGroup{
     }
     
     func shrinkDown()-> Bool{
-        if size > 1 || (size == 1 && next == nil) {
+        if canShrink() {
             size -= 1
             return true
-        } else if let nextB = next{
-            return nextB.next.shrinkDown()
-        } else{
-            return false
         }
+        if let block = next {
+            return block.next.shrinkDown()
+        }
+        return false
+        
     }
 
     func shrinkUp()-> Bool{
-        if size > 1 || (size == 1 && prev == nil){
+        if canShrink() {
             size -= 1
             return true
-        } else if let nextB = prev{
-            return nextB.prev.shrinkUp()
-        } else{
-            return false
         }
+        if let block = prev{
+            return block.prev.shrinkUp()
+        }
+        return false
+        
+    }
+    
+    func canShrink() -> Bool{
+        return size > 1 || (size == 1 && (isLast() || isFirst()))
+    }
+    
+    func inflate() {
+        size += 1
+    }
+    
+    func isFirst() -> Bool {
+        return prev == nil
     }
 
+    func isLast() -> Bool {
+        return next == nil
+    }
 }
 
 protocol CellGroup{
