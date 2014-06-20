@@ -24,6 +24,9 @@ class GameScene: SKScene {
     
     var myGrid : SKShapeNode = SKShapeNode()
     
+    weak var currTouch : AnyObject? = nil
+    weak var currBlock : SKNode? = nil
+    
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
 
@@ -99,9 +102,14 @@ class GameScene: SKScene {
             
             
             let myCol = myGrid.nodeAtPoint(gridLocation)
-            if (myCol != nil){
+            if (myCol){
                 let colLocation =  touch.locationInNode(myCol)
                 let myBlock = myCol.nodeAtPoint(colLocation)
+                
+                if (myBlock){
+                   currTouch = touch
+                   currBlock = myBlock
+                }
                 myLabel.text = "\(myBlock.name)   \(myLabel.text)"
  
             }
@@ -147,6 +155,11 @@ class GameScene: SKScene {
  //           brick.position = CGPoint(x: brick.position.x, y:location.y)
       
         }
+    
+    if (currTouch){
+        let location = touches.anyObject().locationInNode(currBlock)
+        currBlock!.position = CGPoint(x: 0, y: currBlock!.position.y + location.y)
+    }
 }
    
     override func update(currentTime: CFTimeInterval) {
