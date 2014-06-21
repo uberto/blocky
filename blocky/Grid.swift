@@ -39,7 +39,7 @@ class Grid {
         grid.columns[9].addBlocks(9)
         grid.columns[10].addBlocks(4,9)
         grid.columns[11].addBlocks(1,6,5)
-        grid.columns[12].addBlocks(1,5,3,1)
+        grid.columns[12].addBlocks(1,3,3,1)
         grid.columns[13].addBlocks(1,9,2)
         grid.columns[14].addBlocks(4,3)
         

@@ -45,7 +45,7 @@ class GameScene: SKScene {
         spyLabel.fontSize = 12
         spyLabel.color = UIColor.whiteColor()
         spyLabel.position = CGPoint(x:100, y: 100 );
-        self.addChild(spyLabel)
+        //self.addChild(spyLabel)
         
         myGrid = createGrid()
         self.addChild(myGrid)
@@ -92,6 +92,12 @@ class GameScene: SKScene {
     
     func createColumn(colNum: Int, columnModel: Column) -> SKNode{
         
+        func convertPosToY(blockPos: Int, blockSize: Int) -> Float {
+            let ystart: Float = 0.5 * Float( cellsForRow * cellSize) - Float( blockPos * cellSize)
+            let halfHeight : Float = Float(blockSize * cellSize) / 2.0
+            return ystart - halfHeight
+        }
+        
         let column = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: gridSize - margin * 2))
         column.position = CGPoint(x: (colNum - cellsForRow / 2) * cellSize , y: 0)
         column.strokeColor = UIColor.grayColor()
@@ -106,7 +112,7 @@ class GameScene: SKScene {
             let block = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: currBlock.size * cellSize - margin ))
             block.fillColor = decideColorBySize(currBlock.size)
             block.name = "block \(pos) \(colNum)"
-            block.position = CGPoint(x: 0, y: pos * cellSize + currBlock.size * cellSize / 2 )
+            block.position = CGPoint(x: 0, y: convertPosToY(pos, currBlock.size) )
             column.addChild(block)
             
             space = currBlock.next
@@ -117,6 +123,8 @@ class GameScene: SKScene {
 
         return column
     }
+    
+    
     
     
     func decideColorBySize(size: Int) -> UIColor {
