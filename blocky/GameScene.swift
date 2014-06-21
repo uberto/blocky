@@ -7,16 +7,13 @@
 //
 
 //todo
-// create from model
 // check move with model
 // update from model
 // lateral numbers
 // check for win
 
 //bugs
-// move column out
 // move block out of column
-// myLabel over grid
 
 import SpriteKit
 
@@ -25,9 +22,9 @@ class GameScene: SKScene {
     let myLabel = SKLabelNode(fontNamed:"Helvetica")
     let spyLabel = SKLabelNode(fontNamed:"Helvetica")
     
-    let cellSize = 50
+  //  let cellSize = 50
     
-    let cellsForRow = 15
+  //  let cellsForRow = 15
     
     let margin = 2
     
@@ -62,13 +59,13 @@ class GameScene: SKScene {
 
     
     func createGrid() -> SKShapeNode{
-        let columnM = Column(size: cellsForRow)
-        columnM.addBlock( 1)
-        columnM.addBlock( 3)
-        columnM.addBlock( 2)
-        columnM.addBlock( 1)
+
+       // let grid = Grid.createCatFish()
+        let grid = Grid.createNinja()
         
-        let grid = Grid.createCatFish()
+        let cellsForRow = grid.columns.count
+        
+        let cellSize = Int(view.frame.height) / (cellsForRow + 2)
         
         gridSize = cellSize * cellsForRow
         
@@ -77,29 +74,31 @@ class GameScene: SKScene {
         
         myGrid = SKShapeNode(rectOfSize: CGSize(width: gridSize, height: gridSize))
         
-        
-        let gridX = CGRectGetMaxY( self.frame) / 2.0
+        let gridX = CGRectGetMaxY(self.frame) / 2.0
         myGrid.position = CGPoint(x:gridX,y:gridX)
         
-        
-        for i in 0..cellsForRow{
-            myGrid.addChild(createColumn(i, columnModel: grid.columns[i]))
+        var i:Int = 0
+        for col in grid.columns{
+            
+            myGrid.addChild(createColumn(cellSize, colNum: i, columnModel: col))
+            
+            i += 1
         }
         
         return myGrid
     }
     
     
-    func createColumn(colNum: Int, columnModel: Column) -> SKNode{
+    func createColumn(cellSize: Int, colNum: Int, columnModel: Column) -> SKNode{
         
         func convertPosToY(blockPos: Int, blockSize: Int) -> Float {
-            let ystart: Float = 0.5 * Float( cellsForRow * cellSize) - Float( blockPos * cellSize)
+            let ystart: Float = 0.5 * Float( columnModel.size * cellSize) - Float( blockPos * cellSize)
             let halfHeight : Float = Float(blockSize * cellSize) / 2.0
             return ystart - halfHeight
         }
         
         let column = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: gridSize - margin * 2))
-        column.position = CGPoint(x: (colNum - cellsForRow / 2) * cellSize , y: 0)
+        column.position = CGPoint(x: (colNum - columnModel.size / 2) * cellSize , y: 0)
         column.strokeColor = UIColor.grayColor()
         column.fillColor = UIColor.lightGrayColor()
         
