@@ -6,14 +6,24 @@
 //  Copyright (c) 2014 Uberto Barbini. All rights reserved.
 //
 
+//todo
+// create from model
+// check move with model
+// update from model
+// lateral numbers
+// check for win
+
+//bugs
+// move column out
+// move block out of column
+// myLabel over grid
+
 import SpriteKit
 
 class GameScene: SKScene {
     
     let myLabel = SKLabelNode(fontNamed:"Helvetica")
-
-   // let brick = SKShapeNode(rectOfSize: CGSize(width: 50, height: 30))
-    
+   
     let cellSize = 50
     
     let cellsForRow = 15
@@ -29,7 +39,14 @@ class GameScene: SKScene {
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
-
+        
+        
+        let columnM = Column(size: cellsForRow)
+        columnM.addBlock( 1)
+        columnM.addBlock( 3)
+        columnM.addBlock( 2)
+        columnM.addBlock( 1)
+        
         
         gridSize = cellSize * cellsForRow
         
@@ -43,53 +60,43 @@ class GameScene: SKScene {
         myGrid.position = CGPoint(x:gridX,y:gridX)
         
         
-        
-        
         for i in 0..cellsForRow{
-            let column = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: gridSize - margin * 2))
-            column.position = CGPoint(x: (i - cellsForRow / 2) * cellSize , y: 0)
-            column.strokeColor = UIColor.grayColor()
-            
-            
-            
-            column.fillColor = UIColor.lightGrayColor()
-            myGrid.addChild(column)
-            
-            let b1 = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: cellSize - margin ))
-            b1.fillColor = UIColor.greenColor()
-            b1.name = "block 1 \(i)"
-            b1.position = CGPoint(x: 0, y: Int(arc4random_uniform(600)))
-            column.addChild(b1)
-            
-            
-            let b2 = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: 2 * cellSize - margin ))
-            b2.fillColor = UIColor.redColor()
-            b2.name = "block 2 \(i)"
-                b2.position = CGPoint(x: 0, y: Int(arc4random_uniform(600)))
-                    column.addChild(b2)
-            
-            let b3 = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: 3 * cellSize - margin ))
-            b3.fillColor = UIColor.magentaColor()
-            b3.name = "block 3 \(i)"
-                    b3.position = CGPoint(x: 0, y: Int(arc4random_uniform(600)))
-                        column.addChild(b3)
-            
-            
-            
+            myGrid.addChild(createColumn(i, columnModel: columnM))
         }
         self.addChild(myGrid)
         
         
-        
-        
         myLabel.text = "Blocky!"
-        myLabel.fontSize = 24
+        myLabel.fontSize = 12
         
-        myLabel.position = CGPoint(x:CGRectGetMaxX( self.frame) * 0.6 , y: CGRectGetMaxY( self.frame)/2 ); //-   myLabel.frame.height
-        
+        myLabel.position = CGPoint(x:CGRectGetMaxX( self.frame) * 0.9 , y: CGRectGetMaxY( self.frame)/2 );
         self.addChild(myLabel)
         
 
+    }
+    
+    func createColumn(colNum: Int, columnModel: Column) -> SKNode{
+        
+        let column = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: gridSize - margin * 2))
+        column.position = CGPoint(x: (colNum - cellsForRow / 2) * cellSize , y: 0)
+        column.strokeColor = UIColor.grayColor()
+        column.fillColor = UIColor.lightGrayColor()
+        
+        var space = columnModel.firstSpace
+        var pos = 0
+        while (space.next){
+            pos += space.size
+            let bh = space.next!.size
+            
+            let block = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: bh * cellSize - margin ))
+            block.fillColor = UIColor.greenColor()
+            block.name = "block \(pos) \(colNum)"
+            block.position = CGPoint(x: 0, y: (pos + (bh / 2)) * cellSize )
+            column.addChild(block)
+            
+        }
+
+        return column
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
