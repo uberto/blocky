@@ -17,7 +17,7 @@ class Grid {
     
         columns = Column[]()
         for i in 0..size{
-            columns.append(Column(size: size))
+            columns.append(Column(colName: "col \(i)", size: size))
             
         }
         

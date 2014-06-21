@@ -30,13 +30,17 @@ extension String {
 class Column
 {
     let size = 0
+
+    var blockCount = 0
     
     let firstSpace = Space(size: 0)
     
-    init(size: Int){
+    let name: String
+    
+    init(colName:String, size: Int){
         self.size = size
         firstSpace.size = size
-        
+        self.name = colName
     }
     
     func addBlock( blockSize: Int) -> Bool{
@@ -62,12 +66,16 @@ class Column
         
         let newLast = Space(size: last.size - blockSize - newSpaceSize)
         
-        let b = Block(size: blockSize, prev: lastSpace, next: newLast)
+        let blockName = "block \(blockCount)"
+
+        let b = Block(blockName: blockName, size: blockSize, prev: lastSpace, next: newLast)
         
         lastSpace.size = newSpaceSize
         lastSpace.next = b
         b.next = newLast
         newLast.prev = b
+
+        blockCount++
         
         return true
         
@@ -129,11 +137,14 @@ class Block: CellGroup{
     let size = 0
     var prev: Space
     var next: Space
+    let name: String
     
-    init(size: Int, prev: Space, next:Space){
+    
+    init(blockName:String, size: Int, prev: Space, next:Space){
         self.size = size
         self.next = next
         self.prev = prev
+        self.name = blockName
     }
     
     func draw()-> String{

@@ -22,17 +22,19 @@ class GameScene: SKScene {
     let myLabel = SKLabelNode(fontNamed:"Helvetica")
     let spyLabel = SKLabelNode(fontNamed:"Helvetica")
     
-  //  let cellSize = 50
+    let gridModel = Grid.createNinja() //  Grid.createCatFish()
+
     
-  //  let cellsForRow = 15
+
     
     let margin = 2
     
     var gridSize: Int = 0
+    var cellSize: Int = 0
     
     var myGrid : SKShapeNode = SKShapeNode()
     
-    weak var currTouch : AnyObject? = nil
+    weak var currTouch : UITouch? = nil
     weak var currBlock : SKNode? = nil
     
     override func didMoveToView(view: SKView) {
@@ -47,6 +49,8 @@ class GameScene: SKScene {
         myGrid = createGrid()
         self.addChild(myGrid)
         
+        reloadPositionsFromModel()
+        
         
         myLabel.text = "Blocky!"
         myLabel.fontSize = 12
@@ -58,14 +62,11 @@ class GameScene: SKScene {
     }
 
     
-    func createGrid() -> SKShapeNode{
+     func createGrid() -> SKShapeNode{
 
-       // let grid = Grid.createCatFish()
-        let grid = Grid.createNinja()
+        let cellsForRow = gridModel.columns.count
         
-        let cellsForRow = grid.columns.count
-        
-        let cellSize = Int(view.frame.height) / (cellsForRow + 2)
+        cellSize = Int(view.frame.height) / (cellsForRow + 2)
         
         gridSize = cellSize * cellsForRow
         
@@ -78,52 +79,83 @@ class GameScene: SKScene {
         myGrid.position = CGPoint(x:gridX,y:gridX)
         
         var i:Int = 0
-        for col in grid.columns{
+        for col in gridModel.columns{
             
-            myGrid.addChild(createColumn(cellSize, colNum: i, columnModel: col))
+            myGrid.addChild(createColumn(i, columnModel: col))
             
             i += 1
         }
+        
+
+        
         
         return myGrid
     }
     
     
-    func createColumn(cellSize: Int, colNum: Int, columnModel: Column) -> SKNode{
+    func createColumn(colNum: Int, columnModel: Column) -> SKNode{
         
-        func convertPosToY(blockPos: Int, blockSize: Int) -> Float {
-            let ystart: Float = 0.5 * Float( columnModel.size * cellSize) - Float( blockPos * cellSize)
-            let halfHeight : Float = Float(blockSize * cellSize) / 2.0
-            return ystart - halfHeight
-        }
+
         
         let column = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: gridSize - margin * 2))
         column.position = CGPoint(x: (colNum - columnModel.size / 2) * cellSize , y: 0)
         column.strokeColor = UIColor.grayColor()
         column.fillColor = UIColor.lightGrayColor()
+        column.name = columnModel.name
         
         var space = columnModel.firstSpace
         var pos = 0
-        while (space.next){
+        while space.next {
             pos += space.size
             let currBlock = space.next!
             
             let block = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: currBlock.size * cellSize - margin ))
             block.fillColor = decideColorBySize(currBlock.size)
-            block.name = "block \(pos) \(colNum)"
-            block.position = CGPoint(x: 0, y: convertPosToY(pos, currBlock.size) )
+            block.name = currBlock.name
             column.addChild(block)
             
             space = currBlock.next
             pos += currBlock.size
-            
+
             
         }
 
         return column
     }
     
+    func convertPosToY(blockPos: Int, blockSize: Int, columnSize: Int) -> Float {
+        let ystart: Float = 0.5 * Float( columnSize * cellSize) - Float( blockPos * cellSize)
+        let halfHeight : Float = Float(blockSize * cellSize) / 2.0
+        return ystart - halfHeight
+    }
     
+   
+    func reloadPositionsFromModel(){
+        var i = 0
+        for colM in gridModel.columns{
+            
+            let colV = myGrid.childNodeWithName(colM.name)
+            
+            var space = colM.firstSpace
+            var pos = 0
+            while space.next {
+                pos += space.size
+                let blockM = space.next!
+                
+                let blockV = colV.childNodeWithName(blockM.name)
+                
+                blockV.position = CGPoint(x: 0, y: convertPosToY( pos, blockSize: blockM.size, columnSize: colM.size) )
+                
+                space = blockM.next
+                pos += blockM.size
+                
+                
+            }
+
+            
+            i += 1
+        }
+    }
     
     
     func decideColorBySize(size: Int) -> UIColor {
@@ -153,19 +185,19 @@ class GameScene: SKScene {
             myLabel.text = "\(Int(gridLocation.x))   \(Int(gridLocation.y))"
             
             
-            let myCol = myGrid.nodeAtPoint(gridLocation)
-            if (myCol){
+            if let myCol = myGrid.nodeAtPoint(gridLocation) {
                 let colLocation =  touch.locationInNode(myCol)
-                let myBlock = myCol.nodeAtPoint(colLocation)
+                if let myBlock = myCol.nodeAtPoint(colLocation){
                 
-                if (myBlock.name){ //cols has no name  todo find a better way to determine SKNode kind
-                   currTouch = touch
-                    myLabel.text = "\(myBlock.name)   \(myLabel.text)"
-                    currBlock = myBlock
-                } else {
-                    currBlock = nil
-                    myLabel.text = "not touching   \(myLabel.text)"
+                    if (myBlock.name?.hasPrefix("block") ){ // todo find a better way to determine SKNode kind
+                        currTouch = touch as? UITouch
+                        myLabel.text = "\(myBlock.name)   \(myLabel.text)"
+                        currBlock = myBlock
+                    } else {
+                        currBlock = nil
+                        myLabel.text = "not touching   \(myLabel.text)"
                     
+                    }
                 }
             }
             
@@ -187,12 +219,12 @@ class GameScene: SKScene {
     
     
     override func touchesEnded(touches: NSSet!, withEvent event: UIEvent!){
-        
+        reloadPositionsFromModel()
     }
     
  override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
     
-        for touch: AnyObject in touches {
+    for touch: AnyObject in touches {
        
         
     }
