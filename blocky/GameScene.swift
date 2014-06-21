@@ -68,6 +68,7 @@ class GameScene: SKScene {
         columnM.addBlock( 2)
         columnM.addBlock( 1)
         
+        let grid = Grid.createCatFish()
         
         gridSize = cellSize * cellsForRow
         
@@ -82,7 +83,7 @@ class GameScene: SKScene {
         
         
         for i in 0..cellsForRow{
-            myGrid.addChild(createColumn(i, columnModel: columnM))
+            myGrid.addChild(createColumn(i, columnModel: grid.columns[i]))
         }
         
         return myGrid
@@ -120,19 +121,18 @@ class GameScene: SKScene {
     
     func decideColorBySize(size: Int) -> UIColor {
         switch size {
-           case 1:
-            return UIColor.redColor()
-
+            case 1:
+                return UIColor.redColor()
             case 2:
                 return UIColor.greenColor()
-        case 3:
-            return UIColor.magentaColor()
-        case 4:
-            return UIColor.cyanColor()
-        case 5:
-            return UIColor.blueColor()
-        default:
-            return UIColor.whiteColor()
+            case 3:
+                return UIColor.magentaColor()
+            case 4:
+                return UIColor.cyanColor()
+            case 5:
+                return UIColor.blueColor()
+            default:
+                return UIColor.whiteColor()
 
         }
     }

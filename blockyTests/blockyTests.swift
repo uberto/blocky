@@ -59,9 +59,7 @@ class blockyTests: XCTestCase {
     func testGetBlockAtPosition() {
         
         var col = Column(size: 10)
-        col.addBlock(2)
-        col.addBlock(3)
-        col.addBlock(1)
+        col.addBlocks(2, 3, 1)
         
         
         XCTAssertNil(col.getBlockAt( 2));
@@ -77,9 +75,7 @@ class blockyTests: XCTestCase {
     func testMoveDown() {
         
         var col = Column(size: 10)
-        col.addBlock(2)
-        col.addBlock(3)
-        col.addBlock(1)
+        col.addBlocks(2, 3, 1)
         
         let c = col.getBlockAt( 3)!
         
@@ -121,6 +117,29 @@ class blockyTests: XCTestCase {
         XCTAssertTrue( b.moveUp())
         
         XCTAssertEqual(col.draw(), "_##_###_#_", "Pass")
+        
+    }
+    
+    
+    func testGrid() {
+        var grid = Grid(size: 5)
+        
+        XCTAssertEqual(grid.columns.count, 5, "Pass")
+        XCTAssertEqual(grid.columns[0].size, 5, "Pass")
+        XCTAssertEqual(grid.columns[4].size, 5, "Pass")
+        
+    }
+    
+    
+    func testBinary() {
+        let x = 5
+        
+        let bx = 0b101
+        
+        let ex = 0xFF0000
+        
+        XCTAssertEqual(x, Int(bx), "Pass")
+        
         
     }
 

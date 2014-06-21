@@ -73,6 +73,13 @@ class Column
         
     }
     
+    func addBlocks(blocksizes: Int...) {
+        for size in blocksizes{
+            addBlock(size)
+        }
+    }
+    
+    
     func getBlockAt(pos: Int) -> Block?{
         var last: Space = firstSpace
         var currPos = 0
