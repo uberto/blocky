@@ -23,7 +23,8 @@ import SpriteKit
 class GameScene: SKScene {
     
     let myLabel = SKLabelNode(fontNamed:"Helvetica")
-   
+    let spyLabel = SKLabelNode(fontNamed:"Helvetica")
+    
     let cellSize = 50
     
     let cellsForRow = 15
@@ -40,7 +41,27 @@ class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
         
+        spyLabel.text = "start"
+        spyLabel.fontSize = 12
+        spyLabel.color = UIColor.whiteColor()
+        spyLabel.position = CGPoint(x:100, y: 100 );
+        self.addChild(spyLabel)
         
+        myGrid = createGrid()
+        self.addChild(myGrid)
+        
+        
+        myLabel.text = "Blocky!"
+        myLabel.fontSize = 12
+        myLabel.color = UIColor.blueColor()
+        myLabel.position = CGPoint(x:CGRectGetMaxX( self.frame) * 0.9 , y: CGRectGetMaxY( self.frame) * 0.1 );
+        self.addChild(myLabel)
+        
+
+    }
+
+    
+    func createGrid() -> SKShapeNode{
         let columnM = Column(size: cellsForRow)
         columnM.addBlock( 1)
         columnM.addBlock( 3)
@@ -52,9 +73,9 @@ class GameScene: SKScene {
         
         let gridOffsetX = (Int(view.frame.height) - gridSize) / 2
         let gridOffsetY = (Int(view.frame.height) - gridSize) / 2
-            
+        
         myGrid = SKShapeNode(rectOfSize: CGSize(width: gridSize, height: gridSize))
-    
+        
         
         let gridX = CGRectGetMaxY( self.frame) / 2.0
         myGrid.position = CGPoint(x:gridX,y:gridX)
@@ -63,17 +84,10 @@ class GameScene: SKScene {
         for i in 0..cellsForRow{
             myGrid.addChild(createColumn(i, columnModel: columnM))
         }
-        self.addChild(myGrid)
         
-        
-        myLabel.text = "Blocky!"
-        myLabel.fontSize = 12
-        
-        myLabel.position = CGPoint(x:CGRectGetMaxX( self.frame) * 0.9 , y: CGRectGetMaxY( self.frame)/2 );
-        self.addChild(myLabel)
-        
-
+        return myGrid
     }
+    
     
     func createColumn(colNum: Int, columnModel: Column) -> SKNode{
         
@@ -86,17 +100,41 @@ class GameScene: SKScene {
         var pos = 0
         while (space.next){
             pos += space.size
-            let bh = space.next!.size
+            let currBlock = space.next!
             
-            let block = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: bh * cellSize - margin ))
-            block.fillColor = UIColor.greenColor()
+            let block = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: currBlock.size * cellSize - margin ))
+            block.fillColor = decideColorBySize(currBlock.size)
             block.name = "block \(pos) \(colNum)"
-            block.position = CGPoint(x: 0, y: (pos + (bh / 2)) * cellSize )
+            block.position = CGPoint(x: 0, y: pos * cellSize + currBlock.size * cellSize / 2 )
             column.addChild(block)
+            
+            space = currBlock.next
+            pos += currBlock.size
+            
             
         }
 
         return column
+    }
+    
+    
+    func decideColorBySize(size: Int) -> UIColor {
+        switch size {
+           case 1:
+            return UIColor.redColor()
+
+            case 2:
+                return UIColor.greenColor()
+        case 3:
+            return UIColor.magentaColor()
+        case 4:
+            return UIColor.cyanColor()
+        case 5:
+            return UIColor.blueColor()
+        default:
+            return UIColor.whiteColor()
+
+        }
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -113,28 +151,19 @@ class GameScene: SKScene {
                 let colLocation =  touch.locationInNode(myCol)
                 let myBlock = myCol.nodeAtPoint(colLocation)
                 
-                if (myBlock){
+                if (myBlock.name){ //cols has no name  todo find a better way to determine SKNode kind
                    currTouch = touch
-                   currBlock = myBlock
+                    myLabel.text = "\(myBlock.name)   \(myLabel.text)"
+                    currBlock = myBlock
+                } else {
+                    currBlock = nil
+                    myLabel.text = "not touching   \(myLabel.text)"
+                    
                 }
-                myLabel.text = "\(myBlock.name)   \(myLabel.text)"
- 
             }
             
             
-            
-            
-   //         myLabel.text = "\(Int(location.x))   \(Int(location.y))"
-            
-            //touch.
-            
-//            let sprite = SKSpriteNode(imageNamed:"Spaceship")
-//            
-//            sprite.xScale = 0.5
-//            sprite.yScale = 0.5
-//            sprite.position = location
-//            
-            //myLabel.position = location
+
 
             
 //            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
@@ -157,19 +186,23 @@ class GameScene: SKScene {
  override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
     
         for touch: AnyObject in touches {
-            let location = touch.locationInNode(self)
+       
+        
+    }
     
- //           brick.position = CGPoint(x: brick.position.x, y:location.y)
-      
-        }
-    
-    if (currTouch){
+    if (currTouch  && currBlock){
         let location = touches.anyObject().locationInNode(currBlock)
         currBlock!.position = CGPoint(x: 0, y: currBlock!.position.y + location.y)
     }
+    
+
+    
+ 
 }
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+        
+ //       spyLabel.text = " time  " // \(currentTime.value)
     }
 }
