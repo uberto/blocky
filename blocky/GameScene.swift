@@ -123,7 +123,8 @@ class GameScene: SKScene {
         return column
     }
     
-    func convertPosToY(blockPos: Int, blockSize: Int, columnSize: Int) -> Float {
+    func convertPosToY(blockPos: Int, blockSize: Int) -> Float {
+        let columnSize = gridModel.columns.count
         let ystart: Float = 0.5 * Float( columnSize * cellSize) - Float( blockPos * cellSize)
         let halfHeight : Float = Float(blockSize * cellSize) / 2.0
         return ystart - halfHeight
@@ -144,7 +145,7 @@ class GameScene: SKScene {
                 
                 let blockV = colV.childNodeWithName(blockM.name)
                 
-                blockV.position = CGPoint(x: 0, y: convertPosToY( pos, blockSize: blockM.size, columnSize: colM.size) )
+                blockV.position = CGPoint(x: 0, y: convertPosToY( pos, blockSize: blockM.size) )
                 
                 space = blockM.next
                 pos += blockM.size
@@ -229,9 +230,32 @@ class GameScene: SKScene {
         
     }
     
-    if (currTouch  && currBlock){
-        let location = touches.anyObject().locationInNode(currBlock)
-        currBlock!.position = CGPoint(x: 0, y: currBlock!.position.y + location.y)
+    if currTouch {
+        if let blockV = currBlock   {
+            let location = touches.anyObject().locationInNode(blockV)
+        
+        
+            let newY = blockV.position.y + location.y
+            
+            let columnM = gridModel.columns[0] //todo
+            
+            let blockM = columnM.getBlockByName(blockV.name)!
+            
+            let dueY = convertPosToY(columnM.getBlockPosition( blockM.name)!, blockSize: blockM.size)
+            
+            if (dueY - newY) > Float(cellSize) {
+                blockM.moveDown()
+                
+                reloadPositionsFromModel()
+            } else if ( newY - dueY) > Float(cellSize) {
+                blockM.moveUp()
+                
+                reloadPositionsFromModel()
+            } else{
+        
+                currBlock!.position = CGPoint(x: 0, y: newY)
+            }
+        }
     }
     
 

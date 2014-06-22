@@ -31,11 +31,11 @@ class Column
 {
     let size = 0
 
-    var blockCount = 0
-    
     let firstSpace = Space(size: 0)
     
     let name: String
+    
+    var blocksByName: Dictionary<String, Block> = [:]
     
     init(colName:String, size: Int){
         self.size = size
@@ -66,7 +66,7 @@ class Column
         
         let newLast = Space(size: last.size - blockSize - newSpaceSize)
         
-        let blockName = "block \(blockCount)"
+        let blockName = "block \(blocksByName.count)"
 
         let b = Block(blockName: blockName, size: blockSize, prev: lastSpace, next: newLast)
         
@@ -75,7 +75,7 @@ class Column
         b.next = newLast
         newLast.prev = b
 
-        blockCount++
+        blocksByName[blockName] = b
         
         return true
         
@@ -109,6 +109,31 @@ class Column
         }
         return nil
         
+    }
+    
+    func getBlockPosition(blockName: String) -> Int?{
+        var last: Space = firstSpace
+        var currPos = 0
+        while last.next != nil {
+            currPos += last.size
+            
+            
+            let b = last.next!
+            if b.name == blockName{
+                return currPos
+            }
+            
+            currPos += b.size
+            
+
+            last = last.next!.next
+        }
+        return nil
+    }
+    
+    
+    func getBlockByName(blockName: String) -> Block? {
+        return blocksByName[blockName]
     }
     
     
@@ -169,6 +194,7 @@ class Block: CellGroup{
         return true
         
     }
+    
     
 }
 

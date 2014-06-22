@@ -11,6 +11,9 @@ import blocky
 
 class blockyTests: XCTestCase {
     
+    var col = Column(colName: "myCol", size: 10)
+    
+    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -22,7 +25,6 @@ class blockyTests: XCTestCase {
     }
     
     func testStartEmpty() {
-        var col = Column(size: 10)
         
         XCTAssertEqual(col.draw(), "__________", "Pass")
         
@@ -31,7 +33,6 @@ class blockyTests: XCTestCase {
     
     func testStartFillWithBlocks() {
         
-        var col = Column(size: 10)
         
         var block = col.addBlock(2)
         
@@ -58,7 +59,6 @@ class blockyTests: XCTestCase {
     
     func testGetBlockAtPosition() {
         
-        var col = Column(size: 10)
         col.addBlocks(2, 3, 1)
         
         
@@ -71,13 +71,26 @@ class blockyTests: XCTestCase {
         
     }
     
+
+    
+    
+    func testGetBlockByName() {
+        
+       col.addBlocks(2, 3, 1)
+        
+        XCTAssertEqual(2, col.getBlockByName("block 0")!.size, "Pass")
+        XCTAssertEqual(3, col.getBlockByName("block 1")!.size, "Pass")
+        XCTAssertEqual(1, col.getBlockByName("block 2")!.size, "Pass")
+        
+
+        
+    }
     
     func testMoveDown() {
         
-        var col = Column(size: 10)
         col.addBlocks(2, 3, 1)
         
-        let c = col.getBlockAt( 3)!
+        let c = col.getBlockByName("block 1")!
         
         XCTAssertTrue( c.moveDown())
         
@@ -96,7 +109,6 @@ class blockyTests: XCTestCase {
 
     func testMoveUp() {
         
-        var col = Column(size: 10)
         col.addBlock(2)
         col.addBlock(3)
         col.addBlock(1)
