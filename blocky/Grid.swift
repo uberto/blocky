@@ -23,6 +23,14 @@ class Grid {
         
     }
     
+    func getColumnByName(colName: String) -> Column? {
+        for col in columns{
+            if col.name == colName{
+                return col
+            }
+        }
+        return nil
+    }
     
     class func createCatFish() -> Grid{
         let grid = Grid(size: 15)

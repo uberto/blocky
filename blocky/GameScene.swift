@@ -7,13 +7,13 @@
 //
 
 //todo
-// check move with model
-// update from model
 // lateral numbers
+// callback to refresh
+// better coord translations
 // check for win
 
 //bugs
-// move block out of column
+// offset of first touch
 
 import SpriteKit
 
@@ -36,6 +36,7 @@ class GameScene: SKScene {
     
     weak var currTouch : UITouch? = nil
     weak var currBlock : SKNode? = nil
+    var currColName = ""
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -186,7 +187,7 @@ class GameScene: SKScene {
             myLabel.text = "\(Int(gridLocation.x))   \(Int(gridLocation.y))"
             
             
-            if let myCol = myGrid.nodeAtPoint(gridLocation) {
+            if let myCol = myGrid.nodeAtPoint(gridLocation) { //todo actuall mycol is a block if touch the block
                 let colLocation =  touch.locationInNode(myCol)
                 if let myBlock = myCol.nodeAtPoint(colLocation){
                 
@@ -194,10 +195,11 @@ class GameScene: SKScene {
                         currTouch = touch as? UITouch
                         myLabel.text = "\(myBlock.name)   \(myLabel.text)"
                         currBlock = myBlock
+                        currColName = myBlock.parent.name
                     } else {
                         currBlock = nil
                         myLabel.text = "not touching   \(myLabel.text)"
-                    
+                    currColName = ""
                     }
                 }
             }
@@ -230,14 +232,14 @@ class GameScene: SKScene {
         
     }
     
-    if currTouch {
+    if let touch = currTouch {
         if let blockV = currBlock   {
-            let location = touches.anyObject().locationInNode(blockV)
-        
+         //   let touch = touches.anyObject()
+            let location = touch.locationInNode(blockV)
         
             let newY = blockV.position.y + location.y
             
-            let columnM = gridModel.columns[0] //todo
+            let columnM = gridModel.getColumnByName(currColName)!
             
             let blockM = columnM.getBlockByName(blockV.name)!
             
