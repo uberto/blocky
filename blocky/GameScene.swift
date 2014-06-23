@@ -23,8 +23,8 @@ class GameScene: SKScene {
     let myLabel = SKLabelNode(fontNamed:"Helvetica")
     let spyLabel = SKLabelNode(fontNamed:"Helvetica")
     
-    let gridModel = Grid.createNinja() //  Grid.createCatFish()
-
+    let gridModel = Grid.createCatFish()
+   // let gridModel = Grid.createNinja()
     
 
     
@@ -88,6 +88,8 @@ class GameScene: SKScene {
             
             myGrid.addChild(createColumn(i, columnModel: col))
             
+            myGrid.addChild(createLabel(i))
+
             i += 1
         }
         
@@ -97,6 +99,19 @@ class GameScene: SKScene {
         return myGrid
     }
     
+    func createLabel(row: Int) -> SKLabelNode {
+        let label = SKLabelNode(fontNamed:"Courier")
+        
+        label.text = gridModel.rowHints[row].description()
+        label.fontSize = 14
+        label.color = UIColor.blackColor()
+        label.verticalAlignmentMode = SKLabelVerticalAlignmentMode.Center
+        label.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
+
+        label.position = CGPoint(x: gridSize / 2 + cellSize / 5  , y: row * cellSize - gridSize / 2 + cellSize / 2 )
+        
+        return label
+    }
     
     func createColumn(colNum: Int, columnModel: Column) -> SKNode{
         

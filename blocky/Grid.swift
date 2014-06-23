@@ -13,14 +13,17 @@ class Grid {
     
     let columns: Column[]
     
+    let rowHints: RowHint[]
+    
     init(size: Int){
     
         columns = Column[]()
+        rowHints = RowHint[]()
+        
         for i in 0..size{
             columns.append(Column(colName: "col \(i)", size: size))
-            
+            rowHints.append(RowHint())
         }
-        
     }
     
     func getColumnByName(colName: String) -> Column? {
@@ -50,7 +53,23 @@ class Grid {
         grid.columns[12].addBlocks(1,3,3,1)
         grid.columns[13].addBlocks(1,9,2)
         grid.columns[14].addBlocks(4,3)
-        
+
+        grid.rowHints[ 0] = RowHint(hints: 9, 3 )
+        grid.rowHints[ 1] = RowHint(hints: 2,5,2)
+        grid.rowHints[ 2] = RowHint(hints: 7,4,1)
+        grid.rowHints[ 3] = RowHint(hints: 1,7)
+        grid.rowHints[ 4] = RowHint(hints: 14)
+        grid.rowHints[ 5] = RowHint(hints: 5,4,2)
+        grid.rowHints[ 6] = RowHint(hints: 3,8,1)
+        grid.rowHints[ 7] = RowHint(hints: 1,10,1)
+        grid.rowHints[ 8] = RowHint(hints: 1,11)
+        grid.rowHints[ 9] = RowHint(hints: 1,4)
+        grid.rowHints[ 10] = RowHint(hints: 2,3)
+        grid.rowHints[ 11] = RowHint(hints: 2,3,2,2)
+        grid.rowHints[ 12] = RowHint(hints: 3,1,1)
+        grid.rowHints[ 13] = RowHint(hints: 1,1)
+        grid.rowHints[ 14] = RowHint(hints: 5)
+         
         return grid
     }
     
@@ -88,4 +107,27 @@ class Grid {
     }
     
     
+
+    
 }
+
+
+
+class RowHint {
+    let hints : Int[]
+    
+    init (hints: Int...) {
+        self.hints = hints
+    }
+    
+    func description() -> String {
+        return hints.map {
+            (var number) -> String in
+            return String(number)
+            }.reduce(""){ str, next in (str + " " + next) }
+
+
+    }
+}
+
+
