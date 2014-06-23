@@ -103,6 +103,7 @@ class GameScene: SKScene {
         column.strokeColor = UIColor.grayColor()
         column.fillColor = UIColor.lightGrayColor()
         column.name = columnModel.name
+        column.antialiased = false
         
         var space = columnModel.firstSpace
         var pos = 0
@@ -113,6 +114,8 @@ class GameScene: SKScene {
             let block = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: currBlock.size * cellSize - margin ))
             block.fillColor = decideColorBySize(currBlock.size)
             block.name = currBlock.name
+            block.antialiased = false
+            
             column.addChild(block)
             
             space = currBlock.next
@@ -161,19 +164,27 @@ class GameScene: SKScene {
     
     
     func decideColorBySize(size: Int) -> UIColor {
-        switch size {
+
+        let baseColor = 1.0 - (Float(size) / Float(gridModel.columns.count))
+        
+        switch size % 7 {
+
             case 1:
-                return UIColor.redColor()
+               return UIColor(hue: 0.3, saturation: 0.8, brightness: baseColor, alpha: 1)
             case 2:
-                return UIColor.greenColor()
+               return UIColor(hue: 0.6, saturation: 0.8, brightness: baseColor, alpha: 1)
             case 3:
-                return UIColor.magentaColor()
+               return UIColor(hue: 0.9, saturation: 0.8, brightness: baseColor, alpha: 1)
             case 4:
-                return UIColor.cyanColor()
+               return UIColor(hue: 0.2, saturation: 0.8, brightness: baseColor, alpha: 1)
             case 5:
-                return UIColor.blueColor()
+               return UIColor(hue: 0.5, saturation: 0.8, brightness: baseColor, alpha: 1)
+            case 6:
+               return UIColor(hue: 0.8, saturation: 0.8, brightness: baseColor, alpha: 1)
             default:
-                return UIColor.whiteColor()
+               return UIColor(hue: 0.05, saturation: 0.8, brightness: baseColor, alpha: 1)
+      
+            
 
         }
     }
