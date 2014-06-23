@@ -8,12 +8,13 @@
 
 //todo
 // lateral numbers
+// touch state as separate obj
 // callback to refresh
 // better coord translations
 // check for win
 
 //bugs
-// offset of first touch
+
 
 import SpriteKit
 
@@ -34,9 +35,12 @@ class GameScene: SKScene {
     
     var myGrid : SKShapeNode = SKShapeNode()
     
+    
+    //todo move touch state in dedicated object
     weak var currTouch : UITouch? = nil
-    weak var currBlock : SKNode? = nil
+    var currBlock : SKNode? = nil
     var currColName = ""
+    var touchOffsetY : Float = 0
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -184,7 +188,7 @@ class GameScene: SKScene {
             default:
                return UIColor(hue: 0.05, saturation: 0.8, brightness: baseColor, alpha: 1)
       
-            
+     
 
         }
     }
@@ -207,6 +211,7 @@ class GameScene: SKScene {
                         myLabel.text = "\(myBlock.name)   \(myLabel.text)"
                         currBlock = myBlock
                         currColName = myBlock.parent.name
+                        touchOffsetY = touch.locationInNode(myBlock).y
                     } else {
                         currBlock = nil
                         myLabel.text = "not touching   \(myLabel.text)"
@@ -239,39 +244,34 @@ class GameScene: SKScene {
  override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
     
     for touch: AnyObject in touches {
-       
-        
-    }
-    
-    if let touch = currTouch {
-        if let blockV = currBlock   {
-         //   let touch = touches.anyObject()
-            let location = touch.locationInNode(blockV)
-        
-            let newY = blockV.position.y + location.y
-            
-            let columnM = gridModel.getColumnByName(currColName)!
-            
-            let blockM = columnM.getBlockByName(blockV.name)!
-            
-            let dueY = convertPosToY(columnM.getBlockPosition( blockM.name)!, blockSize: blockM.size)
-            
-            if (dueY - newY) > Float(cellSize) {
-                blockM.moveDown()
+        if let touch = currTouch {
+            if let blockV = currBlock   {
+                //   let touch = touches.anyObject()
+                let location = touch.locationInNode(blockV)
                 
-                reloadPositionsFromModel()
-            } else if ( newY - dueY) > Float(cellSize) {
-                blockM.moveUp()
+                let newY = blockV.position.y + location.y - touchOffsetY
                 
-                reloadPositionsFromModel()
-            } else{
-        
-                currBlock!.position = CGPoint(x: 0, y: newY)
+                let columnM = gridModel.getColumnByName(currColName)!
+                
+                let blockM = columnM.getBlockByName(blockV.name)!
+                
+                let dueY = convertPosToY(columnM.getBlockPosition( blockM.name)!, blockSize: blockM.size)
+                
+                if (dueY - newY) > Float(cellSize) {
+                    blockM.moveDown()
+                    
+                    reloadPositionsFromModel()
+                } else if ( newY - dueY) > Float(cellSize) {
+                    blockM.moveUp()
+                    
+                    reloadPositionsFromModel()
+                } else{
+                    
+                    currBlock!.position = CGPoint(x: 0, y: newY)
+                }
             }
         }
     }
-    
-
     
  
 }
