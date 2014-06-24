@@ -55,15 +55,15 @@ class Column
             }
         }
         
+        let newSpaceSize = (firstSpace.next == nil) ? 0: 1
         
-        if last.size <= blockSize {
+        if last.size < newSpaceSize + blockSize {
             return false
         }
         
         let lastSpace = last as Space
         
-        let newSpaceSize = (firstSpace.next == nil) ? 0: 1
-        
+       
         let newLast = Space(size: last.size - blockSize - newSpaceSize)
         
         let blockName = "block \(blocksByName.count)"

@@ -35,6 +35,27 @@ class Grid {
         return nil
     }
     
+    func calculateRow(row: Int) -> RowHint {
+        
+        var blockLengths: Int[] = Int[]()
+        
+        var currBlockSize = 0
+        for col in columns {
+            if let block = col.getBlockAt(row)  {
+                currBlockSize += 1
+            } else if currBlockSize > 0 {
+                blockLengths.append(currBlockSize)
+                currBlockSize = 0
+            }
+        }
+        if currBlockSize > 0 {
+            blockLengths.append(currBlockSize)
+        }
+
+        return RowHint(hintArray: blockLengths)
+
+    }
+    
     class func createCatFish() -> Grid{
         let grid = Grid(size: 15)
         
@@ -118,6 +139,10 @@ class RowHint {
     
     init (hints: Int...) {
         self.hints = hints
+    }
+
+    init (hintArray: Int[]) {
+        self.hints = hintArray
     }
     
     func description() -> String {

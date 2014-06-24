@@ -143,14 +143,26 @@ class blockyTests: XCTestCase {
     }
     
     
-    func testBinary() {
-        let x = 5
+    func testRows() {
+        //###  3
+        // ##  2
+        //# #  1 1
         
-        let bx = 0b101
         
-        let ex = 0xFF0000
+        let kite = Grid(size: 3)
+        kite.columns[0].addBlocks(1,1)
+        kite.columns[1].addBlocks(2)
+        kite.columns[2].addBlocks(3)
+       
+        XCTAssertEqual(kite.columns[0].draw(), "#_#", "Pass")
+        XCTAssertEqual(kite.columns[1].draw(), "##_", "Pass")
+        XCTAssertEqual(kite.columns[2].draw(), "###", "Pass")
         
-        XCTAssertEqual(x, Int(bx), "Pass")
+        
+        
+        XCTAssertEqual(kite.calculateRow(0).description(), " 3", "Pass")
+        XCTAssertEqual(kite.calculateRow(1).description(), " 2", "Pass")
+        XCTAssertEqual(kite.calculateRow(2).description(), " 1 1", "Pass")
         
         
     }
