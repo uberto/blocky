@@ -278,18 +278,18 @@ class GameScene: SKScene {
                 let dueY = convertPosToY(columnM.getBlockPosition( blockM.name)!, blockSize: blockM.size)
                 
                 if (dueY - newY ) > halfCell {
-                    blockM.moveDown()
+                    if blockM.moveDown(){
                     
-                    let orig = blockV.position.y
-                    reloadPositionsFromModel()
-                    blockV.position.y = orig
+                        reloadPositionsFromModel()
+                        blockV.position = CGPoint(x: 0, y: newY)
+                    }
                     
                 } else if ( newY - dueY) > halfCell {
-                    blockM.moveUp()
+                    if blockM.moveUp() {
                     
-                    let orig = blockV.position.y
-                    reloadPositionsFromModel()
-                    blockV.position.y = orig
+                        reloadPositionsFromModel()
+                        blockV.position = CGPoint(x: 0, y: newY)
+                    }
                 } else{
                     
                     blockV.position = CGPoint(x: 0, y: newY)
