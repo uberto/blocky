@@ -261,6 +261,8 @@ class GameScene: SKScene {
     
  override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
     
+    let halfCell = Float(cellSize) / 2
+    
     for touch: AnyObject in touches {
         if let touch = currTouch {
             if let blockV = currBlock   {
@@ -275,17 +277,22 @@ class GameScene: SKScene {
                 
                 let dueY = convertPosToY(columnM.getBlockPosition( blockM.name)!, blockSize: blockM.size)
                 
-                if (dueY - newY) > Float(cellSize) {
+                if (dueY - newY ) > halfCell {
                     blockM.moveDown()
                     
+                    let orig = blockV.position.y
                     reloadPositionsFromModel()
-                } else if ( newY - dueY) > Float(cellSize) {
+                    blockV.position.y = orig
+                    
+                } else if ( newY - dueY) > halfCell {
                     blockM.moveUp()
                     
+                    let orig = blockV.position.y
                     reloadPositionsFromModel()
+                    blockV.position.y = orig
                 } else{
                     
-                    currBlock!.position = CGPoint(x: 0, y: newY)
+                    blockV.position = CGPoint(x: 0, y: newY)
                 }
             }
         }
