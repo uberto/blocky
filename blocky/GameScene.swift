@@ -7,13 +7,16 @@
 //
 
 //todo
-// lateral numbers
+// lateral numbers green when ok
 // touch state as separate obj
 // callback to refresh
 // better coord translations
 // check for win
+// animation for solved
 
 //bugs
+// block should go to next position from nearby, better rounding
+// no block over grid limits
 
 
 import SpriteKit
