@@ -102,16 +102,32 @@ class GameScene: SKScene {
         return myGrid
     }
     
+    func refreshLabels(){
+        for row in 0..gridModel.columns.count{
+            if let label = myGrid.childNodeWithName("row \(row)") as? SKLabelNode{
+                let expected = gridModel.rowHints[row].description()
+                let actual = gridModel.calculateRow(row).description()
+                if (expected == actual){
+                    label.text = expected
+                    label.fontColor = UIColor.greenColor()
+                } else {
+                    label.text = expected + " ->" + actual
+                    label.fontColor = UIColor.whiteColor()
+                }
+            }
+        }
+    }
+    
     func createLabel(row: Int) -> SKLabelNode {
         let label = SKLabelNode(fontNamed:"Courier")
         
-        label.text = gridModel.rowHints[row].description()
+        label.name = "row \(row)"
         label.fontSize = 14
         label.color = UIColor.blackColor()
         label.verticalAlignmentMode = SKLabelVerticalAlignmentMode.Center
         label.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
 
-        label.position = CGPoint(x: gridSize / 2 + cellSize / 5  , y: row * cellSize - gridSize / 2 + cellSize / 2 )
+        label.position = CGPoint(x: gridSize / 2 + cellSize / 5  , y: gridSize / 2 - row * cellSize - cellSize / 2 ) //- gridSize / 2
         
         return label
     }
@@ -182,6 +198,8 @@ class GameScene: SKScene {
             
             i += 1
         }
+        refreshLabels()
+        
     }
     
     

@@ -75,22 +75,22 @@ class Grid {
         grid.columns[13].addBlocks(1,9,2)
         grid.columns[14].addBlocks(4,3)
 
-        grid.rowHints[ 0] = RowHint(hints: 9, 3 )
-        grid.rowHints[ 1] = RowHint(hints: 2,5,2)
-        grid.rowHints[ 2] = RowHint(hints: 7,4,1)
-        grid.rowHints[ 3] = RowHint(hints: 1,7)
-        grid.rowHints[ 4] = RowHint(hints: 14)
-        grid.rowHints[ 5] = RowHint(hints: 5,4,2)
-        grid.rowHints[ 6] = RowHint(hints: 3,8,1)
+        grid.rowHints[ 0] = RowHint(hints: 5)
+        grid.rowHints[ 1] = RowHint(hints: 1,1)
+        grid.rowHints[ 2] = RowHint(hints: 3,1,1)
+        grid.rowHints[ 3] = RowHint(hints: 2,3,2,2)
+        grid.rowHints[ 4] = RowHint(hints: 2,3)
+        grid.rowHints[ 5] = RowHint(hints: 1,4)
+        grid.rowHints[ 6] = RowHint(hints: 1,11)
         grid.rowHints[ 7] = RowHint(hints: 1,10,1)
-        grid.rowHints[ 8] = RowHint(hints: 1,11)
-        grid.rowHints[ 9] = RowHint(hints: 1,4)
-        grid.rowHints[ 10] = RowHint(hints: 2,3)
-        grid.rowHints[ 11] = RowHint(hints: 2,3,2,2)
-        grid.rowHints[ 12] = RowHint(hints: 3,1,1)
-        grid.rowHints[ 13] = RowHint(hints: 1,1)
-        grid.rowHints[ 14] = RowHint(hints: 5)
-         
+        grid.rowHints[ 8] = RowHint(hints: 3,8,1)
+        grid.rowHints[ 9] = RowHint(hints: 5,4,2)
+        grid.rowHints[ 10] = RowHint(hints: 14)
+        grid.rowHints[ 11] = RowHint(hints: 1,7)
+        grid.rowHints[ 12] = RowHint(hints: 7,4,1)
+        grid.rowHints[ 13] = RowHint(hints: 2,5,2)
+        grid.rowHints[ 14] = RowHint(hints: 9, 3 )
+        
         return grid
     }
     
@@ -128,6 +128,53 @@ class Grid {
     }
     
     
+    class func createBubbleSoap() -> Grid{
+        let grid = Grid(size: 20)
+        
+        grid.columns[0].addBlocks(3,5)
+        grid.columns[1].addBlocks(5,2,2,2)
+        grid.columns[2].addBlocks(2,2,1,1,2,1)
+        grid.columns[3].addBlocks(2,3,2,1,2,1)
+        grid.columns[4].addBlocks(1,1,1,1,1,1)
+        grid.columns[5].addBlocks(1,1,2,2)
+        grid.columns[6].addBlocks(1,1,5)
+        grid.columns[7].addBlocks(2,2,1)
+        grid.columns[8].addBlocks(2,2,7)
+        grid.columns[9].addBlocks(5,1,1,1)
+        grid.columns[10].addBlocks(1,1,3)
+        grid.columns[11].addBlocks(5,1)
+        grid.columns[12].addBlocks(3,4,1,1)
+        grid.columns[13].addBlocks(2,11,1)
+        grid.columns[14].addBlocks(2,2,5,1,1,1)
+        grid.columns[15].addBlocks(1,1,4,2,1,3)
+        grid.columns[16].addBlocks(1,5,2,2)
+        grid.columns[17].addBlocks(1,6,2)
+        grid.columns[18].addBlocks(2,8,4)
+        grid.columns[19].addBlocks(2,10,1)
+        
+        grid.rowHints[0] = RowHint(hints: 5,1,1)
+        grid.rowHints[1] = RowHint(hints: 2,2,1,1)
+        grid.rowHints[2] = RowHint(hints: 2,1,2,2,1,1)
+        grid.rowHints[3] = RowHint(hints: 1,1,1,2,2)
+        grid.rowHints[4] = RowHint(hints: 1,1,1,5)
+        grid.rowHints[5] = RowHint(hints: 1,1,1)
+        grid.rowHints[6] = RowHint(hints: 2,1,2,5)
+        grid.rowHints[7] = RowHint(hints: 1,2,2,7)
+        grid.rowHints[8] = RowHint(hints: 1,5,8)
+        grid.rowHints[9] = RowHint(hints: 2,8)
+        grid.rowHints[10] = RowHint(hints: 3,3,4)
+        grid.rowHints[11] = RowHint(hints: 2,3)
+        grid.rowHints[12] = RowHint(hints: 5,1,2,2)
+        grid.rowHints[13] = RowHint(hints: 2,1,2,4,1,2,2)
+        grid.rowHints[14] = RowHint(hints: 1,1,1,1,1,1,1)
+        grid.rowHints[15] = RowHint(hints: 1,1,10,1)
+        grid.rowHints[16] = RowHint(hints: 1,1,1,1,1,2)
+        grid.rowHints[17] = RowHint(hints: 2,2,1,2,3,1)
+        grid.rowHints[18] = RowHint(hints: 5,1,1,4)
+        grid.rowHints[19] = RowHint(hints: 12)
+        
+        return grid
+    }
 
     
 }
