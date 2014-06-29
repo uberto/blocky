@@ -7,16 +7,20 @@
 //
 
 //todo
-// lateral numbers green when ok
+// save restore state
+// check for win
+// animation for solved
+// choose puzzle
+
+
+//tech debt
 // touch state as separate obj
 // callback to refresh
 // better coord translations
-// check for win
-// animation for solved
 
 //bugs
-// block should go to next position from nearby, better rounding
-// no block over grid limits
+// when released or pushed block should move smoothly to next position
+
 
 
 import SpriteKit
@@ -26,8 +30,9 @@ class GameScene: SKScene {
     let myLabel = SKLabelNode(fontNamed:"Helvetica")
     let spyLabel = SKLabelNode(fontNamed:"Helvetica")
     
-    let gridModel = Grid.createCatFish()
+//    let gridModel = Grid.createCatFish()
    // let gridModel = Grid.createNinja()
+     let gridModel = Grid.createBubbleSoap()
     
 
     
@@ -82,7 +87,7 @@ class GameScene: SKScene {
         let gridOffsetY = (Int(view.frame.height) - gridSize) / 2
         
         myGrid = SKShapeNode(rectOfSize: CGSize(width: gridSize, height: gridSize))
-        
+        myGrid.name = "grid"
         let gridX = CGRectGetMaxY(self.frame) / 2.0
         myGrid.position = CGPoint(x:gridX,y:gridX)
         
@@ -137,7 +142,7 @@ class GameScene: SKScene {
 
         
         let column = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: gridSize - margin * 2))
-        column.position = CGPoint(x: (colNum - columnModel.size / 2) * cellSize , y: 0)
+        column.position = CGPoint(x: (0.5 + Float(colNum) - Float(columnModel.size) / 2) * Float(cellSize) , y: 0)
         column.strokeColor = UIColor.grayColor()
         column.fillColor = UIColor.lightGrayColor()
         column.name = columnModel.name
@@ -238,11 +243,9 @@ class GameScene: SKScene {
             myLabel.text = "\(Int(gridLocation.x))   \(Int(gridLocation.y))"
             
             
-            if let myCol = myGrid.nodeAtPoint(gridLocation) { //todo actuall mycol is a block if touch the block
-                let colLocation =  touch.locationInNode(myCol)
-                if let myBlock = myCol.nodeAtPoint(colLocation){
-                
-                    if (myBlock.name?.hasPrefix("block") ){ // todo find a better way to determine SKNode kind
+            if let myBlock = myGrid.nodeAtPoint(gridLocation) { //could be a node or a block
+                let blockName = myBlock.name!
+                    if (blockName.hasPrefix("block") ){ // todo find a better way to determine SKNode kind
                         currTouch = touch as? UITouch
                         myLabel.text = "\(myBlock.name)   \(myLabel.text)"
                         currBlock = myBlock
@@ -251,22 +254,10 @@ class GameScene: SKScene {
                     } else {
                         currBlock = nil
                         myLabel.text = "not touching   \(myLabel.text)"
-                    currColName = ""
+                        currColName = ""
                     }
-                }
+            
             }
-            
-            
-
-
-            
-//            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-
-  //          brick.runAction(SKAction.moveTo(CGPoint(x: brick.position.x, y:location.y) , duration: 0.3))
-            
-//            sprite.runAction(SKAction.repeatActionForever(action))
-            
-          //  self.addChild(sprite)
             
             
         }
