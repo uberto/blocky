@@ -11,6 +11,7 @@
 // check for win
 // animation for solved
 // choose puzzle
+// vertical transformation
 
 
 //tech debt
@@ -268,47 +269,41 @@ class GameScene: SKScene {
         reloadPositionsFromModel()
     }
     
- override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
-    
-    let halfCell = Float(cellSize) / 2
-    
-    for touch: AnyObject in touches {
+    override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
+        
         if let touch = currTouch {
-            if let blockV = currBlock   {
-                //   let touch = touches.anyObject()
-                let location = touch.locationInNode(blockV)
+            if let blockV = currBlock {
                 
-                let newY = blockV.position.y + location.y - touchOffsetY
+                let currY = touch.locationInNode(blockV).y
+                
                 
                 let columnM = gridModel.getColumnByName(currColName)!
                 
                 let blockM = columnM.getBlockByName(blockV.name)!
                 
-                let dueY = convertPosToY(columnM.getBlockPosition( blockM.name)!, blockSize: blockM.size)
+                let newY = blockV.position.y + currY - touchOffsetY
+            
+                let dueY = convertPosToY(columnM.getBlockPosition( blockM.name)!, blockSize: blockM.size) - Float(cellSize) / 2
                 
-                if (dueY - newY ) > halfCell {
+                if dueY - newY  > 0 {
                     if blockM.moveDown(){
-                    
+                        
                         reloadPositionsFromModel()
-                        blockV.position = CGPoint(x: 0, y: newY)
+                        blockV.position.y = newY
                     }
                     
-                } else if ( newY - dueY) > halfCell {
+                } else if newY - dueY > 0 {
                     if blockM.moveUp() {
-                    
+                        
                         reloadPositionsFromModel()
-                        blockV.position = CGPoint(x: 0, y: newY)
+                        blockV.position.y = newY
                     }
-                } else{
-                    
-                    blockV.position = CGPoint(x: 0, y: newY)
-                }
+                } 
             }
         }
     }
     
  
-}
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
