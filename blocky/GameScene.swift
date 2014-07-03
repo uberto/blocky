@@ -31,13 +31,13 @@ class GameScene: SKScene {
     let myLabel = SKLabelNode(fontNamed:"Helvetica")
     let spyLabel = SKLabelNode(fontNamed:"Helvetica")
     
-//    let gridModel = Grid.createCatFish()
-   // let gridModel = Grid.createNinja()
-     let gridModel = Grid.createBubbleSoap()
+    let gridModel = Grid.createCatFish()
+//    let gridModel = Grid.createNinja()
+ //    let gridModel = Grid.createBubbleSoap()
     
 
     
-    let margin = 2
+    let margin = 8
     
     var gridSize: Int = 0
     var cellSize: Int = 0
@@ -101,6 +101,7 @@ class GameScene: SKScene {
 
             i += 1
         }
+        myGrid.fillColor = UIColor(hue: 0.2, saturation: 0.5, brightness: 0.9, alpha: 1);
         
 
         
@@ -133,21 +134,15 @@ class GameScene: SKScene {
         label.verticalAlignmentMode = SKLabelVerticalAlignmentMode.Center
         label.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
 
-        label.position = CGPoint(x: gridSize / 2 + cellSize / 5  , y: gridSize / 2 - row * cellSize - cellSize / 2 ) //- gridSize / 2
-        
+        label.position = CGPoint(x: gridSize / 2 + cellSize / 5  , y: gridSize / 2 - row * cellSize - cellSize / 2 )
         return label
     }
     
     func createColumn(colNum: Int, columnModel: Column) -> SKNode{
         
-
-        
-        let column = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: gridSize - margin * 2))
+        let column = SKNode()
         column.position = CGPoint(x: (0.5 + Float(colNum) - Float(columnModel.size) / 2) * Float(cellSize) , y: 0)
-        column.strokeColor = UIColor.grayColor()
-        column.fillColor = UIColor.lightGrayColor()
         column.name = columnModel.name
-        column.antialiased = false
         
         var space = columnModel.firstSpace
         var pos = 0
@@ -158,6 +153,7 @@ class GameScene: SKScene {
             let block = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: currBlock.size * cellSize - margin ))
             block.fillColor = decideColorBySize(currBlock.size)
             block.name = currBlock.name
+            block.strokeColor = UIColor.blackColor()
             block.antialiased = false
             
             column.addChild(block)
@@ -211,28 +207,29 @@ class GameScene: SKScene {
     
     func decideColorBySize(size: Int) -> UIColor {
 
-        let baseColor = 1.0 - (Float(size) / Float(gridModel.columns.count))
+        return UIColor(hue: 0.2, saturation: 0.8, brightness: 0.8, alpha: 1);
         
-        switch size % 7 {
-
-            case 1:
-               return UIColor(hue: 0.3, saturation: 0.8, brightness: baseColor, alpha: 1)
-            case 2:
-               return UIColor(hue: 0.6, saturation: 0.8, brightness: baseColor, alpha: 1)
-            case 3:
-               return UIColor(hue: 0.9, saturation: 0.8, brightness: baseColor, alpha: 1)
-            case 4:
-               return UIColor(hue: 0.2, saturation: 0.8, brightness: baseColor, alpha: 1)
-            case 5:
-               return UIColor(hue: 0.5, saturation: 0.8, brightness: baseColor, alpha: 1)
-            case 6:
-               return UIColor(hue: 0.8, saturation: 0.8, brightness: baseColor, alpha: 1)
-            default:
-               return UIColor(hue: 0.05, saturation: 0.8, brightness: baseColor, alpha: 1)
-      
+//        let baseColor = 1.0 - (Float(size) / Float(gridModel.columns.count))
+//        
+//        switch size % 7 {
+//
+//            case 1:
+//               return UIColor(hue: 0.3, saturation: 0.8, brightness: baseColor, alpha: 1)
+//            case 2:
+//               return UIColor(hue: 0.6, saturation: 0.8, brightness: baseColor, alpha: 1)
+//            case 3:
+//               return UIColor(hue: 0.9, saturation: 0.8, brightness: baseColor, alpha: 1)
+//            case 4:
+//               return UIColor(hue: 0.2, saturation: 0.8, brightness: baseColor, alpha: 1)
+//            case 5:
+//               return UIColor(hue: 0.5, saturation: 0.8, brightness: baseColor, alpha: 1)
+//            case 6:
+//               return UIColor(hue: 0.8, saturation: 0.8, brightness: baseColor, alpha: 1)
+//            default:
+//               return UIColor(hue: 0.05, saturation: 0.8, brightness: baseColor, alpha: 1)
+//      
      
-
-        }
+//      }
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -270,7 +267,7 @@ class GameScene: SKScene {
     }
     
     override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
-        
+        let halfCell = Float(cellSize) / 2
         if let touch = currTouch {
             if let blockV = currBlock {
                 
@@ -281,24 +278,25 @@ class GameScene: SKScene {
                 
                 let blockM = columnM.getBlockByName(blockV.name)!
                 
-                let newY = blockV.position.y + currY - touchOffsetY
+                var newY = blockV.position.y + currY - touchOffsetY
             
-                let dueY = convertPosToY(columnM.getBlockPosition( blockM.name)!, blockSize: blockM.size) - Float(cellSize) / 2
+                let dueY = convertPosToY(columnM.getBlockPosition( blockM.name)!, blockSize: blockM.size)
                 
-                if dueY - newY  > 0 {
+                if dueY - newY  > halfCell{
                     if blockM.moveDown(){
-                        
                         reloadPositionsFromModel()
-                        blockV.position.y = newY
+                    } else {
+                        newY = dueY - halfCell
                     }
                     
-                } else if newY - dueY > 0 {
+                } else if newY - dueY > halfCell{
                     if blockM.moveUp() {
-                        
                         reloadPositionsFromModel()
-                        blockV.position.y = newY
+                    } else {
+                        newY = halfCell + dueY
                     }
-                } 
+                }
+                blockV.position.y = newY
             }
         }
     }
