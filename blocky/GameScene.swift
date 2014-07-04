@@ -31,9 +31,10 @@ class GameScene: SKScene {
     let myLabel = SKLabelNode(fontNamed:"Helvetica")
     let spyLabel = SKLabelNode(fontNamed:"Helvetica")
     
-    let gridModel = Grid.createCatFish()
+    
+//    let gridModel = Grid.createCatFish()
 //    let gridModel = Grid.createNinja()
- //    let gridModel = Grid.createBubbleSoap()
+     let gridModel = Grid.createBubbleSoap()
     
 
     
@@ -42,7 +43,7 @@ class GameScene: SKScene {
     var gridSize: Int = 0
     var cellSize: Int = 0
     
-    var myGrid : SKShapeNode = SKShapeNode()
+    var myGrid : SKSpriteNode = SKSpriteNode()
     
     
     //todo move touch state in dedicated object
@@ -76,7 +77,7 @@ class GameScene: SKScene {
     }
 
     
-     func createGrid() -> SKShapeNode{
+     func createGrid() -> SKSpriteNode{
 
         let cellsForRow = gridModel.columns.count
         
@@ -87,24 +88,29 @@ class GameScene: SKScene {
         let gridOffsetX = (Int(view.frame.height) - gridSize) / 2
         let gridOffsetY = (Int(view.frame.height) - gridSize) / 2
         
-        myGrid = SKShapeNode(rectOfSize: CGSize(width: gridSize, height: gridSize))
+        myGrid = SKSpriteNode()
+        myGrid.size = CGSize(width: gridSize, height: gridSize)
         myGrid.name = "grid"
         let gridX = CGRectGetMaxY(self.frame) / 2.0
         myGrid.position = CGPoint(x:gridX,y:gridX)
         
         var i:Int = 0
+        
+        for i in 0 .. gridModel.columns.count{
+            
+            myGrid.addChild(createLabel(i))
+            
+            myGrid.addChild(createRow(i))
+       
+        }
+        
         for col in gridModel.columns{
             
             myGrid.addChild(createColumn(i, columnModel: col))
-            
-            myGrid.addChild(createLabel(i))
 
             i += 1
         }
-        myGrid.fillColor = UIColor(hue: 0.2, saturation: 0.5, brightness: 0.9, alpha: 1);
-        
-
-        
+        myGrid.color = UIColor(hue: 0.3, saturation: 0.5, brightness: 0.8, alpha: 1);
         
         return myGrid
     }
@@ -138,6 +144,15 @@ class GameScene: SKScene {
         return label
     }
     
+    func createRow(rowNum: Int) -> SKSpriteNode{
+        
+        let row = SKSpriteNode()
+        row.position = CGPoint(x: 0, y: (Float(rowNum) - Float(gridModel.columns.count) / 2) * Float(cellSize) ) //0.5 +
+        row.size = CGSize(width: gridSize, height: 1 )
+        row.color = UIColor(hue: 0.3, saturation: 0.5, brightness: 0.65, alpha: 1);
+        return row
+    }
+    
     func createColumn(colNum: Int, columnModel: Column) -> SKNode{
         
         let column = SKNode()
@@ -149,12 +164,12 @@ class GameScene: SKScene {
         while space.next {
             pos += space.size
             let currBlock = space.next!
-            
-            let block = SKShapeNode(rectOfSize: CGSize(width: cellSize - margin, height: currBlock.size * cellSize - margin ))
-            block.fillColor = decideColorBySize(currBlock.size)
+           
+            let block = SKSpriteNode()
+            block.size = CGSize(width: cellSize - margin, height: currBlock.size * cellSize - margin )
+   
+            block.color = decideColorBySize(currBlock.size)
             block.name = currBlock.name
-            block.strokeColor = UIColor.blackColor()
-            block.antialiased = false
             
             column.addChild(block)
             
@@ -207,7 +222,7 @@ class GameScene: SKScene {
     
     func decideColorBySize(size: Int) -> UIColor {
 
-        return UIColor(hue: 0.2, saturation: 0.8, brightness: 0.8, alpha: 1);
+        return UIColor(hue: 0.55, saturation: 0.8, brightness: 0.6, alpha: 1);
         
 //        let baseColor = 1.0 - (Float(size) / Float(gridModel.columns.count))
 //        
@@ -278,7 +293,15 @@ class GameScene: SKScene {
                 
                 let blockM = columnM.getBlockByName(blockV.name)!
                 
-                var newY = blockV.position.y + currY - touchOffsetY
+                var delta = currY - touchOffsetY
+                if delta > halfCell {
+                    delta = halfCell
+                }
+                if delta < -halfCell {
+                    delta = -halfCell
+                }
+                
+                var newY = blockV.position.y + delta
             
                 let dueY = convertPosToY(columnM.getBlockPosition( blockM.name)!, blockSize: blockM.size)
                 
