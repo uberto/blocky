@@ -282,7 +282,7 @@ class GameScene: SKScene {
     }
     
     override func touchesMoved(touches: NSSet, withEvent event: UIEvent) {
-        let halfCell = Float(cellSize) / 2
+        let maxDelta = Float(cellSize)
         if let touch = currTouch {
             if let blockV = currBlock {
                 
@@ -294,29 +294,29 @@ class GameScene: SKScene {
                 let blockM = columnM.getBlockByName(blockV.name)!
                 
                 var delta = currY - touchOffsetY
-                if delta > halfCell {
-                    delta = halfCell
+                if delta > maxDelta {
+                    delta = maxDelta
                 }
-                if delta < -halfCell {
-                    delta = -halfCell
+                if delta < -maxDelta {
+                    delta = -maxDelta
                 }
                 
                 var newY = blockV.position.y + delta
             
                 let dueY = convertPosToY(columnM.getBlockPosition( blockM.name)!, blockSize: blockM.size)
                 
-                if dueY - newY  > halfCell{
+                if dueY - newY  > maxDelta {
                     if blockM.moveDown(){
                         reloadPositionsFromModel()
                     } else {
-                        newY = dueY - halfCell
+                        newY = dueY - maxDelta
                     }
                     
-                } else if newY - dueY > halfCell{
+                } else if newY - dueY > maxDelta {
                     if blockM.moveUp() {
                         reloadPositionsFromModel()
                     } else {
-                        newY = halfCell + dueY
+                        newY = maxDelta + dueY
                     }
                 }
                 blockV.position.y = newY
